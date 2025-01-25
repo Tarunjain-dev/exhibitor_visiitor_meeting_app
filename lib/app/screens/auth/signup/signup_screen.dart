@@ -1,5 +1,4 @@
 import 'package:exhibitor_visiitor_meeting_app/app/constants/colors.dart';
-import 'package:exhibitor_visiitor_meeting_app/app/screens/auth/signup/signup_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -13,7 +12,7 @@ class SignupScreen extends StatefulWidget {
 
 class _SignupScreenState extends State<SignupScreen> {
 
-  SignupController signupController = Get.put(SignupController());
+  var isLoading = false;
   final _formKey = GlobalKey<FormState>();
   TextEditingController usernameController = TextEditingController();
   TextEditingController emailController = TextEditingController();
@@ -33,12 +32,7 @@ class _SignupScreenState extends State<SignupScreen> {
     if(_formKey.currentState!.validate()){
       if(passwordController.text.toString().trim() == confirmPasswordController.text.toString().trim()){
         // Signup user with there email-password and store their credentials in fireStore database.
-        signupController.signup(
-            userEmail: emailController.text.toString(),
-            userPassword: passwordController.text.toString(),
-            userName: usernameController.text.toString(),
-            userRole: roleDropDownValue,
-        );
+
       }else{
         // password and confirm password is not matching
         Get.snackbar("Credentials not matching!", "Either password or confirm-password is incorrect.");
@@ -269,8 +263,7 @@ class _SignupScreenState extends State<SignupScreen> {
                   ),
 
                   // signup Button
-                  Obx(
-                    ()=> SizedBox(
+                  SizedBox(
                       height: 46.h,
                       width: double.infinity,
                       child: ElevatedButton(
@@ -278,11 +271,11 @@ class _SignupScreenState extends State<SignupScreen> {
                           style: ButtonStyle(
                             backgroundColor: WidgetStatePropertyAll(Color(0xff5782BB)),
                           ),
-                          child: signupController.isLoading.value? Center(child: CircularProgressIndicator(color: Colors.white)) :
+                          child: isLoading ? Center(child: CircularProgressIndicator(color: Colors.white)) :
                           Text("Register", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20.sp, color: Colors.white),)
                       ),
                     ),
-                  ),
+
                   SizedBox(height: 12.h),
 
                   // Already have an account? button

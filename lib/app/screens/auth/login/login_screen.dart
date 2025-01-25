@@ -1,5 +1,4 @@
 import 'package:exhibitor_visiitor_meeting_app/app/constants/colors.dart';
-import 'package:exhibitor_visiitor_meeting_app/app/screens/auth/login/login_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -13,7 +12,7 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
 
-  LoginController loginController = Get.put(LoginController());
+  var isLoading = false;
   final _formKey = GlobalKey<FormState>();
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
@@ -31,13 +30,9 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   // Login function to handel user SignIn process
-  void login(){
-    if(_formKey.currentState!.validate()){
+  void login() async{
+    if(_formKey.currentState!.validate()) {
       // login backend codes here...
-      loginController.login(
-        userEmail: emailController.text.toString(),
-        userPassword: passwordController.text.toString(),
-      );
     }
   }
 
@@ -155,8 +150,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         SizedBox(height: 20.h),
 
                         // SignIn Button
-                        Obx(
-                          ()=> SizedBox(
+                        SizedBox(
                             height: 40.h,
                             width: double.infinity,
                             child: ElevatedButton(
@@ -164,11 +158,11 @@ class _LoginScreenState extends State<LoginScreen> {
                                 style: ButtonStyle(
                                   backgroundColor: WidgetStatePropertyAll(Color(0xff5782BB)),
                                 ),
-                                child: loginController.isLoading.value ? Center(child: CircularProgressIndicator(color: Colors.white)) :
+                                child: isLoading ? Center(child: CircularProgressIndicator(color: Colors.white)) :
                                 Text("Sign In", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20.sp, color: Colors.white),)
                             ),
                           ),
-                        ),
+
                         SizedBox(height: 12.h),
 
                         // Don't have an account? button
