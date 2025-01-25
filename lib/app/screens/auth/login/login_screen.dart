@@ -1,4 +1,5 @@
 import 'package:exhibitor_visiitor_meeting_app/app/constants/colors.dart';
+import 'package:exhibitor_visiitor_meeting_app/app/screens/auth/login/login_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -12,7 +13,7 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
 
-  bool isLoading = false;
+  LoginController loginController = Get.put(LoginController());
   final _formKey = GlobalKey<FormState>();
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
@@ -33,6 +34,10 @@ class _LoginScreenState extends State<LoginScreen> {
   void login(){
     if(_formKey.currentState!.validate()){
       // login backend codes here...
+      loginController.login(
+        userEmail: emailController.text.toString(),
+        userPassword: passwordController.text.toString(),
+      );
     }
   }
 
@@ -150,16 +155,18 @@ class _LoginScreenState extends State<LoginScreen> {
                         SizedBox(height: 20.h),
 
                         // SignIn Button
-                        SizedBox(
-                          height: 40.h,
-                          width: double.infinity,
-                          child: ElevatedButton(
-                              onPressed: ()=> login(),
-                              style: ButtonStyle(
-                                backgroundColor: WidgetStatePropertyAll(Color(0xff5782BB)),
-                              ),
-                              child: isLoading? Center(child: CircularProgressIndicator(color: Colors.white)) :
-                              Text("Sign In", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20.sp, color: Colors.white),)
+                        Obx(
+                          ()=> SizedBox(
+                            height: 40.h,
+                            width: double.infinity,
+                            child: ElevatedButton(
+                                onPressed: ()=> login(),
+                                style: ButtonStyle(
+                                  backgroundColor: WidgetStatePropertyAll(Color(0xff5782BB)),
+                                ),
+                                child: loginController.isLoading.value ? Center(child: CircularProgressIndicator(color: Colors.white)) :
+                                Text("Sign In", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20.sp, color: Colors.white),)
+                            ),
                           ),
                         ),
                         SizedBox(height: 12.h),
