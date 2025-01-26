@@ -73,12 +73,21 @@ class RecentChatController extends GetxController{
 
   createChatRoom(ChatRoomModel chatRoomModel, UserModel otherUser) async {
     await FirebaseService.to.createChatRoom(chatRoomModel);
-    Get.toNamed(AppRoutes.chatScreen, parameters: {
-      "chatRoomId": chatRoomModel.chatRoomId!,
-      "toUserProfile": otherUser.profileUrl?? '',
-      "toUserName": otherUser.name?? '',
-      "toUserUid": otherUser.userId?? ''
-    });
+    if(UserStore.to.profile.userType == UserType.EXHIBITOR) {
+      Get.toNamed(AppRoutes.exhibitorChatSpaceScreen, parameters: {
+        "chatRoomId": chatRoomModel.chatRoomId!,
+        "toUserProfile": otherUser.profileUrl ?? '',
+        "toUserName": otherUser.name ?? '',
+        "toUserUid": otherUser.userId ?? ''
+      });
+    } else {
+      Get.toNamed(AppRoutes.visitorChatSpaceScreen, parameters: {
+        "chatRoomId": chatRoomModel.chatRoomId!,
+        "toUserProfile": otherUser.profileUrl ?? '',
+        "toUserName": otherUser.name ?? '',
+        "toUserUid": otherUser.userId ?? ''
+      });
+    }
   }
 
   generateChatRoomId(String myUserUid, String otherUserId) {

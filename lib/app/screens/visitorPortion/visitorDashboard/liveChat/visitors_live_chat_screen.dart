@@ -23,7 +23,7 @@ class VisitorLiveChattingScreen extends GetView<RecentChatController> {
       // Add new chat (FAB)
       floatingActionButton: FloatingActionButton(
         onPressed: (){
-          // Add new chat and navigation
+          Get.toNamed(AppRoutes.visitorSelectContactScreen);
         },
         backgroundColor: appBlueColor,
         child: Icon(Icons.add_comment_outlined,size: 28.sp, color: Colors.white,),
@@ -86,7 +86,7 @@ class VisitorLiveChattingScreen extends GetView<RecentChatController> {
                         var otherUser = controller.otherUser[index];
                         return GestureDetector(
                           onTap: () {
-                            Get.toNamed(AppRoutes.chatScreen, parameters: {
+                            Get.toNamed(AppRoutes.visitorChatSpaceScreen, parameters: {
                               "chatRoomId": item.chatRoomId!,
                               "toUserProfile": otherUser.profileUrl!,
                               "toUserName": otherUser.name!,

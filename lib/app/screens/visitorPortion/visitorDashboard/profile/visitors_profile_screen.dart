@@ -1,5 +1,6 @@
 import 'package:exhibitor_visiitor_meeting_app/app/constants/colors.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:exhibitor_visiitor_meeting_app/app/routes/app_routes.dart';
+import 'package:exhibitor_visiitor_meeting_app/app/service/user.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -13,15 +14,14 @@ class VisitorProfileScreen extends StatefulWidget {
 
 class _VisitorProfileScreenState extends State<VisitorProfileScreen> {
 
-  TextEditingController usernameController = TextEditingController();
-  TextEditingController emailController = TextEditingController();
-  TextEditingController phoneNumberController = TextEditingController();
-  TextEditingController companyNameController = TextEditingController();
-  TextEditingController companyDescriptionController = TextEditingController();
+  TextEditingController usernameController = TextEditingController(text: UserStore.to.profile.name);
+  TextEditingController emailController = TextEditingController(text: UserStore.to.profile.email);
+  TextEditingController phoneNumberController = TextEditingController(text: UserStore.to.profile.phone);
+  TextEditingController companyNameController = TextEditingController(text: UserStore.to.profile.companyName);
+  TextEditingController companyDescriptionController = TextEditingController(text: UserStore.to.profile.companyDesc);
 
   @override
   void dispose() {
-    // TODO: implement dispose
     super.dispose();
     usernameController.dispose();
     emailController.dispose();
@@ -40,8 +40,7 @@ class _VisitorProfileScreenState extends State<VisitorProfileScreen> {
         actions: [
           IconButton(
               onPressed: (){
-                // Edit User profile Navigation.
-                Get.toNamed('/editVisitorProfile');
+                Get.toNamed(AppRoutes.editVisitorProfileRoute);
               },
               icon: Icon(Icons.edit_outlined)
           ),
@@ -53,7 +52,6 @@ class _VisitorProfileScreenState extends State<VisitorProfileScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              /// upperMostRow: profile image, username, email, camera and Logout button.
               Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
@@ -63,24 +61,28 @@ class _VisitorProfileScreenState extends State<VisitorProfileScreen> {
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10.r),
                       border: Border.all(color: appBlueColor, width: 2.sp),
-                      image: DecorationImage(
-                          image: AssetImage("assets/images/profileImg.png"),
+                      image: UserStore.to.profile.profileUrl == ''
+                          ? DecorationImage(
+                            image: AssetImage("assets/images/profileImg.png"),
+                            fit: BoxFit.cover
+                          ) : DecorationImage(
+                          image: NetworkImage(UserStore.to.profile.profileUrl!),
                           fit: BoxFit.cover
-                      ),
+                      ) ,
                     ),
                   ),
                   SizedBox(width: 10.w),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text("Hello John", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18.sp)),
-                      Text("johndoe@gmail.com", style: TextStyle(fontWeight: FontWeight.normal, fontSize: 14.sp)),
+                      Text(UserStore.to.profile.name!, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18.sp)),
+                      Text(UserStore.to.profile.email!, style: TextStyle(fontWeight: FontWeight.normal, fontSize: 14.sp)),
                     ],
                   ),
                   Expanded(child: SizedBox(width: 10.w,)),
                   InkWell(
                     onTap: (){
-                      /// Logout functionality  here....
+                      UserStore.to.onLogout();
                     },
                     child: Container(
                       height: 34.h,
@@ -136,6 +138,7 @@ class _VisitorProfileScreenState extends State<VisitorProfileScreen> {
               Text(" Username", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18.sp, color: Colors.black),),
               TextFormField(
                 controller: usernameController,
+                enabled: false,
                 decoration: InputDecoration(
                   prefixIcon: Icon(Icons.person,size: 20.sp,color: Colors.grey),
                   border: OutlineInputBorder(
@@ -172,6 +175,7 @@ class _VisitorProfileScreenState extends State<VisitorProfileScreen> {
               Text(" Email address", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18.sp, color: Colors.black),),
               TextFormField(
                 controller: emailController,
+                enabled: false,
                 decoration: InputDecoration(
                   prefixIcon: Icon(Icons.alternate_email_rounded,size: 20.sp,color: Colors.grey),
                   border: OutlineInputBorder(
@@ -208,6 +212,7 @@ class _VisitorProfileScreenState extends State<VisitorProfileScreen> {
               Text(" Phone number", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18.sp, color: Colors.black),),
               TextFormField(
                 controller: phoneNumberController,
+                enabled: false,
                 keyboardType: TextInputType.phone,
                 decoration: InputDecoration(
                   prefixIcon: Icon(Icons.phone,size: 20.sp,color: Colors.grey),
@@ -245,6 +250,7 @@ class _VisitorProfileScreenState extends State<VisitorProfileScreen> {
               Text(" Company Name", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18.sp, color: Colors.black),),
               TextFormField(
                 controller: companyNameController,
+                enabled: false,
                 decoration: InputDecoration(
                   prefixIcon: Icon(Icons.work_outline_rounded,size: 20.sp,color: Colors.grey),
                   border: OutlineInputBorder(
@@ -283,6 +289,7 @@ class _VisitorProfileScreenState extends State<VisitorProfileScreen> {
                 height: 100.h,
                 child: TextFormField(
                   controller: companyDescriptionController,
+                  enabled: false,
                   expands: true,
                   maxLines: null,
                   minLines: null,

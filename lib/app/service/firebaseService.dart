@@ -127,4 +127,20 @@ class FirebaseService extends GetxController {
           .set(chatRoom.toJson());
     }
   }
+
+  searchUsers(String text) {
+    return fireStore
+        .collection("Users")
+        .where("userId", isNotEqualTo: UserStore.to.userId)
+        .where("name", isLessThanOrEqualTo: text)
+        .snapshots();
+  }
+
+  updateUser(UserModel user) async {
+    await fireStore
+        .collection("Users")
+        .doc(UserStore.to.userId)
+        .update(user.toJson());
+    await UserStore.to.getProfile();
+  }
 }

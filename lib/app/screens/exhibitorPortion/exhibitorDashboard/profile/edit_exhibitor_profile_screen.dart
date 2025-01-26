@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
-class EditVisitorProfileScreen extends GetView<EditProfileController> {
-  EditVisitorProfileScreen({super.key});
+class EditExhibitorProfileScreen extends GetView<EditProfileController> {
+  EditExhibitorProfileScreen({super.key});
   final _formKey = GlobalKey<FormState>();
   void saveChanges(){
     if(_formKey.currentState!.validate()){
