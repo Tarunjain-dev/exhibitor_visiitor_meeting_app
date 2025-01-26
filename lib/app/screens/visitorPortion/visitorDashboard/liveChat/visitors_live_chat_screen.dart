@@ -1,8 +1,13 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:exhibitor_visiitor_meeting_app/app/constants/colors.dart';
+import 'package:exhibitor_visiitor_meeting_app/app/getx/controllers/recentChatController.dart';
+import 'package:exhibitor_visiitor_meeting_app/app/routes/app_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 
-class VisitorLiveChattingScreen extends StatelessWidget {
+class VisitorLiveChattingScreen extends GetView<RecentChatController> {
   const VisitorLiveChattingScreen({super.key});
 
 
@@ -71,56 +76,99 @@ class VisitorLiveChattingScreen extends StatelessWidget {
 
               /// Chats List
               Expanded(
-                child: ListView.builder(
-                  itemCount: 6,
-                  scrollDirection: Axis.vertical,
-                  itemBuilder: (context, index) {
-                    return Padding(
-                      padding: EdgeInsets.only(top: 4.sp,bottom: 4.sp),
-                      child: Container(
-                        width: double.infinity,
-                        height: 55.h,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10.r),
-                          border: Border.all(color: Color(0xffD9D9D9), width: 1.5.sp),
-                        ),
-                        child: Padding(
-                          padding: EdgeInsets.only(bottom: 6.sp,top: 6.sp, right: 8.sp,left: 8.sp),
-                          child: Row(
-                            children: [
-                              Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  CircleAvatar(
-                                    backgroundColor: appBlueColor,
-                                    child: Text("A", style: TextStyle(fontSize: 20.sp, fontWeight: FontWeight.bold, color: Colors.white),),
-                                  )
-                                ],
+                child: Obx(
+                  () => ListView.builder(
+                    itemCount: controller.chatRoomList.length,
+                    scrollDirection: Axis.vertical,
+                    itemBuilder: (context, index) {
+                      if (controller.chatRoomList.isNotEmpty && controller.otherUser.isNotEmpty) {
+                        var item = controller.chatRoomList[index];
+                        var otherUser = controller.otherUser[index];
+                        return GestureDetector(
+                          onTap: () {
+                            Get.toNamed(AppRoutes.chatScreen, parameters: {
+                              "chatRoomId": item.chatRoomId!,
+                              "toUserProfile": otherUser.profileUrl!,
+                              "toUserName": otherUser.name!,
+                              "toUserId": otherUser.userId!,
+                            });
+                          },
+                          child: Padding(
+                            padding: EdgeInsets.only(top: 4.sp,bottom: 4.sp),
+                            child: Container(
+                              width: double.infinity,
+                              height: 55.h,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10.r),
+                                border: Border.all(color: Color(0xffD9D9D9), width: 1.5.sp),
                               ),
-                              SizedBox(width: 10.w),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  SizedBox(height: 2.h),
-                                  Text("Ayushmaan Sahu", style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold, color: Colors.black),),
-                                  SizedBox(height: 2.h),
-                                  Text("Hey,How are you?", style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.normal, color: Colors.black),),
-                                ],
+                              child: Padding(
+                                padding: EdgeInsets.only(bottom: 6.sp,top: 6.sp, right: 8.sp,left: 8.sp),
+                                child: Row(
+                                  children: [
+                                    Column(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        CircleAvatar(
+                                          backgroundColor: appBlueColor,
+                                          child: otherUser.profileUrl != ''
+                                            ? CachedNetworkImage(
+                                            imageUrl: otherUser.profileUrl?? '',
+                                              imageBuilder: (context, imageProvider) {
+                                                return Container(
+                                                  decoration: BoxDecoration(
+                                                    borderRadius: BorderRadius.circular(44.r),
+                                                    image: DecorationImage(
+                                                      image: imageProvider,
+                                                      fit: BoxFit.cover,
+                                                    ),
+                                                  ),
+                                                );
+                                              },
+                                              errorWidget: (context, url, error) {
+                                                return Container();
+                                              },
+                                            ) : CircleAvatar(
+                                            radius: 25.r,
+                                            backgroundImage: const AssetImage(
+                                              'assets/images/avatar.png',
+                                            ),
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                    SizedBox(width: 10.w),
+                                    Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        SizedBox(height: 2.h),
+                                        Text(otherUser.name?? '', style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold, color: Colors.black),),
+                                        SizedBox(height: 2.h),
+                                        Text(item.lastMessage?? '', style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.normal, color: Colors.black),),
+                                      ],
+                                    ),
+                                    Expanded(child: SizedBox(width: 10.w)),
+                                    Column(
+                                      children: [
+                                        SizedBox(height: 6.h),
+                                        Text(
+                                          DateFormat("hh:mm a").format(item.lastMessageTm!),
+                                          style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.normal, color: Colors.black),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
                               ),
-                              Expanded(child: SizedBox(width: 10.w)),
-                              Column(
-                                children: [
-                                  SizedBox(height: 6.h),
-                                  Text("12:08 PM", style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.normal, color: Colors.black),),
-                                ],
-                              ),
-                            ],
+                            ),
                           ),
-                        ),
-                      ),
-                    );
-                  },
+                        );
+                      } else {
+                        return const CircularProgressIndicator();
+                      }
+                    },
+                  ),
                 ),
               ),
             ],

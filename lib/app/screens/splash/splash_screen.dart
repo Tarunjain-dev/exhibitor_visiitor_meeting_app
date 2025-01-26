@@ -16,7 +16,6 @@ class _SplashScreenState extends State<SplashScreen> {
   SplashController splashController = Get.put(SplashController());
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     splashController.splashServices();
   }

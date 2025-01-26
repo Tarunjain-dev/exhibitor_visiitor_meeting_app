@@ -1,57 +1,22 @@
 import 'package:exhibitor_visiitor_meeting_app/app/constants/colors.dart';
+import 'package:exhibitor_visiitor_meeting_app/app/screens/auth/signup/getx/controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
-class SignupScreen extends StatefulWidget {
-  const SignupScreen({super.key});
+class SignupScreen extends GetView<SignUpController> {
+  SignupScreen({super.key});
 
-  @override
-  State<SignupScreen> createState() => _SignupScreenState();
-}
-
-class _SignupScreenState extends State<SignupScreen> {
-
-  var isLoading = false;
   final _formKey = GlobalKey<FormState>();
-  TextEditingController usernameController = TextEditingController();
-  TextEditingController emailController = TextEditingController();
-  TextEditingController passwordController = TextEditingController();
-  TextEditingController confirmPasswordController = TextEditingController();
-  FocusNode usernameField = FocusNode();
-  FocusNode emailField = FocusNode();
-  FocusNode passwordField = FocusNode();
-  FocusNode confirmPasswordField = FocusNode();
 
-  // Initial Selected "Role" Value
-  String roleDropDownValue = 'Foreign Visitor';
-  var roles = ["Foreign Visitor", "Indian Exhibitor"];
-
-  // Signup function to handel user registration
   void signup() {
     if(_formKey.currentState!.validate()){
-      if(passwordController.text.toString().trim() == confirmPasswordController.text.toString().trim()){
-        // Signup user with there email-password and store their credentials in fireStore database.
-
+      if(controller.passwordController.text.toString().trim() == controller.confirmPasswordController.text.toString().trim()){
+        controller.signUp();
       }else{
-        // password and confirm password is not matching
         Get.snackbar("Credentials not matching!", "Either password or confirm-password is incorrect.");
       }
     }
-  }
-
-  @override
-  void dispose() {
-    // TODO: implement dispose
-    super.dispose();
-    usernameController.dispose();
-    emailController.dispose();
-    passwordController.dispose();
-    confirmPasswordController.dispose();
-    usernameField.dispose();
-    emailField.dispose();
-    passwordField.dispose();
-    confirmPasswordField.dispose();
   }
 
   @override
@@ -81,8 +46,8 @@ class _SignupScreenState extends State<SignupScreen> {
                           // Username : Text field
                           Text(" Username", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18.sp, color: Colors.black),),
                           TextFormField(
-                            controller: usernameController,
-                            focusNode: usernameField,
+                            controller: controller.usernameController,
+                            focusNode: controller.usernameField,
                             decoration: InputDecoration(
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(10.r),
@@ -109,7 +74,7 @@ class _SignupScreenState extends State<SignupScreen> {
                               return null;
                             },
                             onFieldSubmitted: (value) {
-                              FocusScope.of(context).requestFocus(emailField);
+                              FocusScope.of(context).requestFocus(controller.emailField);
                             },
                             obscureText: false,
                             cursorColor: appBlueColor,
@@ -119,8 +84,8 @@ class _SignupScreenState extends State<SignupScreen> {
                           // Email : Text field
                           Text(" Email", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18.sp, color: Colors.black),),
                           TextFormField(
-                            controller: emailController,
-                            focusNode: emailField,
+                            controller: controller.emailController,
+                            focusNode: controller.emailField,
                             decoration: InputDecoration(
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(10.r),
@@ -147,7 +112,7 @@ class _SignupScreenState extends State<SignupScreen> {
                               return null;
                             },
                             onFieldSubmitted: (value) {
-                              FocusScope.of(context).requestFocus(passwordField);
+                              FocusScope.of(context).requestFocus(controller.passwordField);
                             },
                             obscureText: false,
                             cursorColor: appBlueColor,
@@ -157,8 +122,8 @@ class _SignupScreenState extends State<SignupScreen> {
                           // Password : Text field
                           Text(" Password", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18.sp, color: Colors.black),),
                           TextFormField(
-                            controller: passwordController,
-                            focusNode: passwordField,
+                            controller: controller.passwordController,
+                            focusNode: controller.passwordField,
                             decoration: InputDecoration(
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(10.r),
@@ -185,7 +150,7 @@ class _SignupScreenState extends State<SignupScreen> {
                               return null;
                             },
                             onFieldSubmitted: (value) {
-                              FocusScope.of(context).requestFocus(confirmPasswordField);
+                              FocusScope.of(context).requestFocus(controller.confirmPasswordField);
                             },
                             obscureText: false,
                             cursorColor: appBlueColor,
@@ -195,8 +160,8 @@ class _SignupScreenState extends State<SignupScreen> {
                           // Confirm Password : Text field
                           Text(" Confirm Password", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18.sp, color: Colors.black),),
                           TextFormField(
-                            controller: confirmPasswordController,
-                            focusNode: confirmPasswordField,
+                            controller: controller.confirmPasswordController,
+                            focusNode: controller.confirmPasswordField,
                             decoration: InputDecoration(
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(10.r),
@@ -239,21 +204,21 @@ class _SignupScreenState extends State<SignupScreen> {
                                 border: Border.all(color: Colors.black, width: 1)
                             ),
                             child: DropdownButtonHideUnderline(
-                              child: DropdownButton(
-                                value: roleDropDownValue,
-                                isExpanded: true,
-                                icon: const Icon(Icons.keyboard_arrow_down),
-                                items: roles.map((String index) {
-                                  return DropdownMenuItem(
-                                    value: index,
-                                    child: Text(index),
-                                  );
-                                }).toList(),
-                                onChanged: (String? newValue) {
-                                  setState(() {
-                                    roleDropDownValue = newValue!;
-                                  });
-                                },
+                              child: Obx(
+                                () => DropdownButton(
+                                  value: controller.roleDropDownValue.value,
+                                  isExpanded: true,
+                                  icon: const Icon(Icons.keyboard_arrow_down),
+                                  items: controller.roles.map((String index) {
+                                    return DropdownMenuItem(
+                                      value: index,
+                                      child: Text(index),
+                                    );
+                                  }).toList(),
+                                  onChanged: (String? newValue) {
+                                    controller.roleDropDownValue.value = newValue!;
+                                  },
+                                ),
                               ),
                             ),
                           ),
@@ -271,21 +236,21 @@ class _SignupScreenState extends State<SignupScreen> {
                           style: ButtonStyle(
                             backgroundColor: WidgetStatePropertyAll(Color(0xff5782BB)),
                           ),
-                          child: isLoading ? Center(child: CircularProgressIndicator(color: Colors.white)) :
-                          Text("Register", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20.sp, color: Colors.white),)
+                          child: Obx(
+                            () => controller.isLoading.value
+                                ? Center(child: CircularProgressIndicator(color: Colors.white))
+                                : Text("Register", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20.sp, color: Colors.white),),
+                          )
                       ),
                     ),
 
                   SizedBox(height: 12.h),
-
-                  // Already have an account? button
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text("Already have an account?", style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w600, color: Colors.black)),
                       InkWell(
                         onTap: (){
-                          // Navigate back to login Screen
                           Get.back();
                         },
                         child: Text(" SignIn", style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold, color: appBlueColor)),

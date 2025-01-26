@@ -1,38 +1,18 @@
 import 'package:exhibitor_visiitor_meeting_app/app/constants/colors.dart';
+import 'package:exhibitor_visiitor_meeting_app/app/routes/app_routes.dart';
+import 'package:exhibitor_visiitor_meeting_app/app/screens/auth/login/getx/controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
-class LoginScreen extends StatefulWidget {
-  const LoginScreen({super.key});
+class LoginScreen extends GetView<LoginController> {
+  LoginScreen({super.key});
 
-  @override
-  State<LoginScreen> createState() => _LoginScreenState();
-}
-
-class _LoginScreenState extends State<LoginScreen> {
-
-  var isLoading = false;
   final _formKey = GlobalKey<FormState>();
-  TextEditingController emailController = TextEditingController();
-  TextEditingController passwordController = TextEditingController();
-  FocusNode emailField = FocusNode();
-  FocusNode passwordField = FocusNode();
 
-  @override
-  void dispose() {
-    // TODO: implement dispose
-    super.dispose();
-    emailController.dispose();
-    passwordController.dispose();
-    emailField.dispose();
-    passwordField.dispose();
-  }
-
-  // Login function to handel user SignIn process
   void login() async{
     if(_formKey.currentState!.validate()) {
-      // login backend codes here...
+      controller.login();
     }
   }
 
@@ -61,11 +41,10 @@ class _LoginScreenState extends State<LoginScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        // Email Text field
                         Text(" Email", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18.sp, color: Colors.black),),
                         TextFormField(
-                          controller: emailController,
-                          focusNode: emailField,
+                          controller: controller.emailController,
+                          focusNode: controller.emailField,
                           decoration: InputDecoration(
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(10.r),
@@ -92,7 +71,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             return null;
                           },
                           onFieldSubmitted: (value) {
-                            FocusScope.of(context).requestFocus(passwordField);
+                            FocusScope.of(context).requestFocus(controller.passwordField);
                           },
                           obscureText: false,
                           cursorColor: appBlueColor,
@@ -102,8 +81,8 @@ class _LoginScreenState extends State<LoginScreen> {
                         // Password Text field
                         Text(" Password", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18.sp, color: Colors.black),),
                         TextFormField(
-                          controller: passwordController,
-                          focusNode: passwordField,
+                          controller: controller.passwordController,
+                          focusNode: controller.passwordField,
                           decoration: InputDecoration(
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(10.r),
@@ -136,20 +115,15 @@ class _LoginScreenState extends State<LoginScreen> {
                           cursorColor: appBlueColor,
                         ),
                         SizedBox(height: 8.h),
-
-                        // Forgot Password
                         Align(
                           alignment: Alignment.centerRight,
                           child: InkWell(
                               onTap: (){
-                                // Forgot Password Functionality here...
-                                Get.toNamed("/forgotPassword");
+                                Get.toNamed(AppRoutes.forgotPasswordRoute);
                               },
                               child: Text("Forgot Password?", style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.bold, color: appBlueColor))),
                         ),
                         SizedBox(height: 20.h),
-
-                        // SignIn Button
                         SizedBox(
                             height: 40.h,
                             width: double.infinity,
@@ -158,22 +132,21 @@ class _LoginScreenState extends State<LoginScreen> {
                                 style: ButtonStyle(
                                   backgroundColor: WidgetStatePropertyAll(Color(0xff5782BB)),
                                 ),
-                                child: isLoading ? Center(child: CircularProgressIndicator(color: Colors.white)) :
-                                Text("Sign In", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20.sp, color: Colors.white),)
+                                child: Obx(
+                                  () => controller.isLoading.value
+                                      ? Center(child: CircularProgressIndicator(color: Colors.white))
+                                      : Text("Sign In", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20.sp, color: Colors.white),),
+                                )
                             ),
                           ),
-
                         SizedBox(height: 12.h),
-
-                        // Don't have an account? button
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text("Don't have an account?", style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w600, color: Colors.black)),
                             InkWell(
                               onTap: (){
-                                // Navigate to SignUp Screen
-                                Get.toNamed("/signup");
+                                Get.toNamed(AppRoutes.signupRoute);
                               },
                               child: Text(" SignUp", style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold, color: appBlueColor)),
                             ),

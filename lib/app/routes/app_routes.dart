@@ -1,4 +1,5 @@
 import 'package:exhibitor_visiitor_meeting_app/app/screens/auth/forgotPassword/forgot_password_screen.dart';
+import 'package:exhibitor_visiitor_meeting_app/app/screens/auth/login/getx/binding.dart';
 import 'package:exhibitor_visiitor_meeting_app/app/screens/auth/login/login_screen.dart';
 import 'package:exhibitor_visiitor_meeting_app/app/screens/auth/signup/signup_screen.dart';
 import 'package:exhibitor_visiitor_meeting_app/app/screens/common/eventMap/event_map.dart';
@@ -20,25 +21,42 @@ import 'package:get/get.dart';
 
 class AppRoutes {
   static const initialRoute = '/';
+  static const loginRoute = '/login';
+  static const signupRoute = '/signup';
+  static const forgotPasswordRoute = '/forgotPassword';
+  static const visitorDashboardBottomNavRoute = '/visitorDashboardBottomNav';
+  static const visitorHomeRoute = '/visitorHome';
+  static const sellerListRoute = '/sellerList';
+  static const visitorScheduleNewMeetRoute = '/visitorScheduleNewMeet';
+  static const visitorLiveChattingRoute = '/visitorLiveChatting';
+  static const visitorProfileRoute = '/visitorProfile';
+  static const editVisitorProfileRoute = '/editVisitorProfile';
+  static const exhibitorDashboardBottomNavRoute = '/exhibitorDashboardBottomNav';
+  static const buyersListRoute = '/buyersList';
+  static const exhibitorHomeRoute = '/exhibitorHome';
+  static const exhibitorLiveChattingRoute = '/exhibitorLiveChatting';
+  static const exhibitorProfileRoute = '/exhibitorProfile';
+  static const exhibitorScheduleNewMeetRoute = '/exhibitorScheduleNewMeet';
+  static const eventMapRoute = '/eventMap';
 
   static final routes = [
     GetPage(name: "/", page: ()=> SplashScreen()),
-    GetPage(name: "/login", page: ()=> LoginScreen()),
-    GetPage(name: "/signup", page: ()=> SignupScreen()),
-    GetPage(name: "/forgotPassword", page: ()=> ForgotPasswordScreen()),
-    GetPage(name: "/visitorDashboardBottomNavigation", page: ()=> VisitorDashboardBottomNavigation()),
-    GetPage(name: "/visitorHome", page: ()=> VisitorHomeScreen()),
-    GetPage(name: "/sellerList", page: ()=> SellerListScreen()),
-    GetPage(name: "/visitorScheduleNewMeeting", page: ()=> VisitorScheduleNewMeetingScreen()),
-    GetPage(name: "/visitorLiveChatting", page: ()=> VisitorLiveChattingScreen()),
-    GetPage(name: "/visitorProfile", page: ()=> VisitorProfileScreen()),
-    GetPage(name: "/editVisitorProfile", page: ()=> EditVisitorProfileScreen()),
-    GetPage(name: "/exhibitorDashboardBottomNavigation", page: ()=> ExhibitorDashboardBottomNavigation()),
-    GetPage(name: "/buyerList", page: ()=> BuyerListScreen()),
-    GetPage(name: "/exhibitorHome", page: ()=> ExhibitorHomeScreen()),
-    GetPage(name: "/exhibitorLiveChatting", page: ()=> ExhibitorLiveChattingScreen()),
-    GetPage(name: "/exhibitorProfile", page: ()=> ExhibitorProfileScreen()),
-    GetPage(name: "/exhibitorScheduleNewMeeting", page: ()=> ExhibitorScheduleNewMeetingScreen()),
-    GetPage(name: "/eventMap", page: ()=> EventMapScreen()),
+    GetPage(name: loginRoute, page: ()=> LoginScreen(), binding: LoginBinding()),
+    GetPage(name: signupRoute, page: ()=> SignupScreen()),
+    GetPage(name: forgotPasswordRoute, page: ()=> ForgotPasswordScreen()),
+    GetPage(name: visitorDashboardBottomNavRoute, page: ()=> VisitorDashboardBottomNavigation()),
+    GetPage(name: visitorHomeRoute, page: ()=> VisitorHomeScreen()),
+    GetPage(name: sellerListRoute, page: ()=> SellerListScreen()),
+    GetPage(name: visitorScheduleNewMeetRoute, page: ()=> VisitorScheduleNewMeetingScreen()),
+    GetPage(name: visitorLiveChattingRoute, page: ()=> VisitorLiveChattingScreen()),
+    GetPage(name: visitorProfileRoute, page: ()=> VisitorProfileScreen()),
+    GetPage(name: editVisitorProfileRoute, page: ()=> EditVisitorProfileScreen()),
+    GetPage(name: exhibitorDashboardBottomNavRoute, page: ()=> ExhibitorDashboardBottomNavigation()),
+    GetPage(name: buyersListRoute, page: ()=> BuyerListScreen()),
+    GetPage(name: exhibitorHomeRoute, page: ()=> ExhibitorHomeScreen()),
+    GetPage(name: exhibitorLiveChattingRoute, page: ()=> ExhibitorLiveChattingScreen()),
+    GetPage(name: exhibitorProfileRoute, page: ()=> ExhibitorProfileScreen()),
+    GetPage(name: exhibitorScheduleNewMeetRoute, page: ()=> ExhibitorScheduleNewMeetingScreen()),
+    GetPage(name: eventMapRoute, page: ()=> EventMapScreen()),
   ];
 }
